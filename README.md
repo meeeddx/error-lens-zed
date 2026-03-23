@@ -1,64 +1,38 @@
 # Error Lens for Zed
 
-A starter project for a Zed extension inspired by the VS Code **Error Lens** experience.
+A Zed editor extension inspired by the VS Code **Error Lens** experience — currently a scaffold and research base.
 
-## Goal
+## Current Status
 
-The intended experience is:
+This extension is a **minimal scaffold**. No options or settings are implemented yet.
 
-- Show diagnostics inline at the end of the affected line
-- Color-code messages by severity
-- Prefix messages with severity icons
-- Update in real time as diagnostics change
-- Respect Zed theme colors where possible
+The public Zed extension API does not currently expose the editor decoration or inlay hooks needed to fully recreate VS Code-style Error Lens behavior from a third-party extension.
 
-## Current status
+## What Is Inside the Extension
 
-This repository is currently a **scaffold and research base**, not a full implementation.
+| File | Purpose |
+|------|---------|
+| `extension.toml` | Zed extension manifest (id, name, version, description) |
+| `Cargo.toml` | Rust crate configuration for WebAssembly output |
+| `src/lib.rs` | Minimal extension entry point — registers the extension with Zed |
 
-### Why
+### `src/lib.rs`
 
-At the time this project was generated, Zed already includes built-in inline diagnostics, and the public extension API does not appear to expose the editor decoration/inlay hooks needed for a third-party extension to fully recreate VS Code-style Error Lens behavior.
+The entry point registers the extension. No logic, no settings, no options are wired up yet.
 
-That means features like these are likely **not implementable in a standalone extension yet**:
+### `extension.toml`
 
-- custom inline virtual text rendering in the editor buffer
-- custom per-severity inline icons and styling
-- line dimming or full-line diagnostic highlighting
-- direct subscription to editor diagnostic rendering events for custom UI
-
-## What Zed already supports natively
-
-Zed has built-in inline diagnostics that can be enabled in your user settings:
-
-```json
-{
-  "diagnostics": {
-    "inline": {
-      "enabled": true,
-      "max_severity": null
-    }
-  }
-}
+```toml
+id = "error-lens-zed"
+name = "Error Lens"
+version = "0.1.0"
+schema_version = 1
+authors = ["Error Lens Contributors"]
+description = "VS Code-style inline diagnostic hints for the Zed editor."
+repository = "https://github.com/example/error-lens-zed"
 ```
 
-This gives you a native, theme-aware inline diagnostic experience without requiring an extension.
-
-## Purpose of this repository
-
-This project exists to provide:
-
-- a clean Zed extension skeleton in Rust
-- a place to track implementation work
-- documentation of current API limitations
-- a foundation for future development if Zed exposes decoration/inlay APIs to extensions
-
-## Project structure
-
-- `extension.toml` — Zed extension manifest
-- `Cargo.toml` — Rust crate configuration for WebAssembly output
-- `src/lib.rs` — minimal extension entry point
-- `docs/implementation-plan.md` — roadmap and technical notes
+> There is no settings schema in the extension yet. Any options listed elsewhere are planned for a future release and are **not active**.
 
 ## Development
 
@@ -68,13 +42,17 @@ This project exists to provide:
 - Zed installed
 - WebAssembly target used by Zed extensions
 
-Example setup:
-
 ```sh
 rustup target add wasm32-wasip2
 ```
 
-### Install locally in Zed
+### Build
+
+```sh
+cargo build --release --target wasm32-wasip2
+```
+
+### Install Locally in Zed
 
 1. Open Zed
 2. Open the Extensions page
@@ -83,27 +61,28 @@ rustup target add wasm32-wasip2
 
 ## Roadmap
 
-### Phase 1
+### Phase 1 — Scaffold *(current)*
 - [x] Create extension scaffold
 - [x] Document current API constraints
 - [ ] Confirm behavior against the latest Zed extension API
 
-### Phase 2
-- [ ] Add extension settings/schema if editor-side rendering APIs become available
-- [ ] Implement severity filtering and truncation options
-- [ ] Render only the highest-severity diagnostic per line
-- [ ] Add theme-aware color mapping
-- [ ] Explore line fading/dimming support if exposed by Zed
+### Phase 2 — Settings *(blocked on Zed API)*
+- [ ] Add extension settings schema once editor-side rendering APIs become available
+- [ ] `enabled` — master on/off toggle
+- [ ] `max_severity` — filter by severity level
+- [ ] `max_message_length` — truncate long messages
+- [ ] `show_icons` — enable/disable severity icons
+- [ ] `show_only_highest_severity_per_line` — reduce visual clutter
 
-### Phase 3
-- [ ] Publish extension once the required APIs exist
+### Phase 3 — Full Rendering *(future)*
+- [ ] Inline line-end diagnostic text
+- [ ] Severity-aware colors
+- [ ] Real-time updates on diagnostic changes
+
+### Phase 4 — Publish
+- [ ] Publish extension once required APIs exist
 
 ## Notes
 
-If your real goal is simply to get Error Lens behavior in Zed today, the best option is to use Zed’s built-in inline diagnostics.
-
-If your goal is to build a publishable extension with custom rendering behavior, this repository is the starting point, but the missing editor APIs are the current blocker.
-
-## License
-
-Add a license before publishing.
+- See `docs/implementation-plan.md` for a full technical breakdown of the API gap and architecture plan.
+- Until rendering APIs are public
