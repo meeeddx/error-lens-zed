@@ -1,0 +1,19 @@
+[package]
+name = "error-lens-zed"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Scaffold for a Zed extension inspired by VS Code Error Lens"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+zed_extension_api = "0.7.0"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = "debuginfo"
+panic = "abort"

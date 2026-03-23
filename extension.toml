@@ -1,0 +1,7 @@
+id = "error-lens-zed"
+name = "Error Lens"
+version = "0.1.0"
+schema_version = 1
+authors = ["Error Lens Contributors"]
+description = "VS Code-style inline diagnostic hints for the Zed editor."
+repository = "https://github.com/example/error-lens-zed"

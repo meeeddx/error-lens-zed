@@ -1,0 +1,17 @@
+# Pin the toolchain to the GNU variant so this extension builds without
+# requiring Visual Studio or the Windows SDK (kernel32.lib etc.).
+#
+# The x86_64-pc-windows-gnu toolchain uses GCC/MinGW as its host linker,
+# which is bundled with the rust-mingw component and needs no extra setup.
+#
+# wasm32-wasip2 is the compile target required by Zed for all extensions.
+# It must be installed for whichever toolchain is active:
+#   rustup target add wasm32-wasip2
+#
+# If you later install Visual Studio Build Tools you can switch back to:
+#   channel = "stable-x86_64-pc-windows-msvc"
+# and remove this file.
+
+[toolchain]
+channel = "stable-x86_64-pc-windows-gnu"
+targets = ["wasm32-wasip2"]

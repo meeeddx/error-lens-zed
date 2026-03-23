@@ -1,0 +1,35 @@
+# Cargo build configuration
+# ──────────────────────────────────────────────────────────────────────────────
+# Problem: the only `link.exe` on PATH is Git-for-Windows' GNU hard-link
+#          utility (C:\Program Files\Git\usr\bin\link.exe), which is NOT a
+#          linker and causes every build-script compilation to fail.
+#
+#          The MSVC toolchain also requires Windows SDK import libraries
+#          (kernel32.lib, ntdll.lib, etc.) which are not installed on this
+#          machine (no Visual Studio / Windows Kits present).
+#
+# Fix:     Switch the default host toolchain to x86_64-pc-windows-gnu.
+#          The GNU toolchain uses GCC/MinGW as its linker, which ships
+#          bundled with the toolchain and does NOT need the Windows SDK.
+#
+#          One-time setup (already done):
+#            rustup toolchain install stable-x86_64-pc-windows-gnu
+#            rustup target add wasm32-wasip2 --toolchain stable-x86_64-pc-windows-gnu
+#
+#          To build the extension:
+#            cargo +stable-x86_64-pc-windows-gnu build --release --target wasm32-wasip2
+# ──────────────────────────────────────────────────────────────────────────────
+
+[build]
+# Use the GNU toolchain for all builds by default.
+# This avoids needing the Windows SDK (kernel32.lib etc.) that MSVC requires.
+target = "wasm32-wasip2"
+
+[target.x86_64-pc-windows-gnu]
+# The GNU toolchain's linker (gcc) is bundled with rust-mingw and needs no
+# extra configuration. No linker override is required here.
+
+[target.x86_64-pc-windows-msvc]
+# Keep the lld-link workaround in case someone runs the MSVC toolchain,
+# but builds will still fail without the Windows SDK installed.
+linker = "lld-link"

@@ -1,0 +1,31 @@
+# Rust
+/target/
+**/*.rs.bk
+
+# Cargo
+Cargo.lock
+
+# WebAssembly build artifacts
+/pkg/
+/dist/
+*.wasm
+
+# Zed / editor
+.zed/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.*
+
+# IDEs
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
